@@ -954,7 +954,7 @@ func.plotStepwiseRecovery = function(whichCompound){
     
     # stepwise loss
     geom_label(aes(label = round(stepLossPercent, 1), y = lossMarkPosition), 
-               size = 5, 
+               size = 3.5, 
                # fontface = "bold",
                position = position_dodge(dg)) +
     
@@ -962,7 +962,7 @@ func.plotStepwiseRecovery = function(whichCompound){
     geom_label(aes(label = round(ymark, 1), 
                    fill = status, 
                    y = ymark, x = numericX + .5), 
-               fontface = "bold", size = 6, color = "white") 
+               fontface = "bold", size = 4.5, color = "white") 
   
   print(plt)
   
