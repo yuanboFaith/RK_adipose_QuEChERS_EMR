@@ -4,4 +4,6 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Stepwise recovery"
+      href: Stepwise_Recovery_linePlot.html
 output_dir: "."
