@@ -25,7 +25,7 @@ theme_set(theme_bw() + theme(axis.text = element_text(colour = "black"),
                              strip.background = element_blank(),
                              strip.text = element_text(face = "bold")))
 
-path = "/Users/Boyuan/Desktop/My publication/17. EMR Adipose RK metabolites/All data RK lipid EMR.xlsx"
+path = "/Users/Boyuan/Desktop/My publication/17. EMR Adipose RK metabolites/data RK lipid EMR validation 3th ,Zhiya 081920.xlsx"
 
 color.cmpd = colorRampPalette(brewer.pal(8, "Dark2"))(26) %>% sort()
 
