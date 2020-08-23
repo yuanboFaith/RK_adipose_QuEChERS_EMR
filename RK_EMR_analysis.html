@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>EMR RK Analysis Script</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Stepwise_Recovery_linePlot.html">Stepwise recovery</a>
+</li>
+<li>
+  <a href="RK_EMR_analysis.html">Analysis script</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">EMR RK Analysis Script</h1>
+
+</div>
+
+
+<pre class="r"><code>library(rebus)
+library(cowplot)
+library(gridExtra)
+library(readxl)
+library(RColorBrewer)
+library(ggrepel)
+library(tidyverse)
+
+theme_set(theme_bw() + theme(axis.text = element_text(colour = &quot;black&quot;, size = 14.5),
+                             axis.title = element_text(colour = &quot;black&quot;, face = &quot;bold&quot;, size = 15.5),
+                             strip.background = element_blank(),
+                             panel.border = element_rect(size = .5, color = &quot;black&quot;),
+                             strip.text = element_text(face = &quot;bold&quot;, size = 12)))</code></pre>
+<div id="sorbent-optimization" class="section level1">
+<h1>Sorbent optimization</h1>
+<pre class="r"><code>path = &quot;/Users/Boyuan/Desktop/My publication/17. EMR Adipose RK metabolites/data RK lipid EMR validation 3th ,Zhiya 081920.xlsx&quot;
+
+color.cmpd = colorRampPalette(brewer.pal(8, &quot;Dark2&quot;))(26) %&gt;% sort() %&gt;% sort()
+
+d.opt.sorbent = read_excel(path, sheet = &quot;sorbent opt&quot;)
+
+d.opt.sorbent = d.opt.sorbent %&gt;%
+  gather(-c(`Data File`, sorbent, `Acq. Date-Time`), key = compound, value = resp)
+
+x = d.opt.sorbent %&gt;% filter(sorbent == &quot;ctrl&quot;) %&gt;%
+  group_by(compound) %&gt;%
+  summarise(resp.ctrl.mean = mean(resp),
+            resp.ctrl.sd = sd(resp))
+
+y = d.opt.sorbent %&gt;% filter(sorbent != &quot;ctrl&quot;) %&gt;%
+  group_by(sorbent, compound) %&gt;%
+  summarise(resp.mean = mean(resp), resp.sd = sd(resp))
+
+d.opt.sorbent.recovery = y %&gt;% left_join(x, by = c(&quot;compound&quot;)) %&gt;%
+  mutate(recovery.mean = resp.mean / resp.ctrl.mean * 100,
+         recovery.sd = sqrt((resp.sd/resp.mean)^2 + (resp.ctrl.sd/resp.ctrl.mean)^2) * recovery.mean  )
+d.opt.sorbent.recovery</code></pre>
+<pre><code>## # A tibble: 182 x 8
+## # Groups:   sorbent [7]
+##    sorbent compound resp.mean resp.sd resp.ctrl.mean resp.ctrl.sd recovery.mean
+##    &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+##  1 100 NP  3-HBA        2537.    91.8          2731.        313.           92.9
+##  2 100 NP  3-HPAA       2248.   329.           2560.         37.8          87.8
+##  3 100 NP  3-HPPA       3208.   479.           3907.        119.           82.1
+##  4 100 NP  3,4-DHBA     1123.   178.           1099.        241.          102. 
+##  5 100 NP  3,4-DHP…      176.   119.            407.        147.           43.1
+##  6 100 NP  3,4-DHPE     1031.    93.5          1672.        145.           61.7
+##  7 100 NP  3,4-DHP…      203.    81.7           646.         85.6          31.5
+##  8 100 NP  4-HBA        6886.   742.           7439.        138.           92.6
+##  9 100 NP  4-HBOH       2652.   280.           3249.         96.3          81.6
+## 10 100 NP  4-HCA        1226.   152.           1367.         34.8          89.7
+## # … with 172 more rows, and 1 more variable: recovery.sd &lt;dbl&gt;</code></pre>
+<pre class="r"><code>d.opt.sorbent.recovery$sorbent = d.opt.sorbent.recovery$sorbent %&gt;% 
+  factor(levels = c(&quot;Sorbent free&quot;, &quot;100 NP (big size)&quot;, &quot;100 NP&quot;, &quot;75 NP-25 RP&quot;, &quot;50 NP-50 RP&quot;, &quot;25 NP-75 RP&quot;, &quot;100 RP&quot;), ordered = T)
+
+# low recovery compounds without sorbent
+l = d.opt.sorbent.recovery %&gt;% filter(sorbent == &quot;Sorbent free&quot;) %&gt;%
+  filter(recovery.mean &lt; 30)
+
+
+cmpd.lowRecovery = c(&quot;RK-Me&quot;, &quot;PhLiAce&quot;, &quot;3,4-DHPPA&quot;, &quot;3,4-DHPAA&quot;, &quot;CA&quot;, &quot;4-HBOH&quot;)
+
+dg = .3
+plt.sorbentOptimization = d.opt.sorbent.recovery %&gt;%
+  filter(!compound %in% cmpd.lowRecovery ) %&gt;%
+  ggplot(aes(x = sorbent, y = recovery.mean, color = compound, fill = compound)) +
+  
+  geom_boxplot(data = d.opt.sorbent.recovery, outlier.alpha = 0, 
+               width = .8, fill = &quot;snow1&quot;,
+               aes(group = sorbent)) +
+  
+  geom_errorbar(aes(ymin = recovery.mean - recovery.sd,
+                    ymax = recovery.mean + recovery.sd),
+                position = position_dodge(dg), size = .1, width = 1) +
+  geom_point(position = position_dodge(dg), shape = 21, fill = &quot;white&quot;, size = 2) +
+  
+  theme(legend.position = &quot;none&quot;, panel.grid = element_blank(),
+        axis.text = element_text(size = 11, colour = &quot;black&quot;),
+        axis.title = element_text(size = 12, colour = &quot;black&quot;)) +
+  scale_y_continuous(breaks = seq(0, 150, by = 10)) +
+  coord_cartesian(ylim = c(0, 110)) +
+  
+  # threshold
+  geom_segment(aes(x = .5, xend =  7.5, y = 30, yend = 30), 
+               linetype = &quot;dashed&quot;, size = 1, color = &quot;firebrick&quot;) +
+  
+  # add special note to low-recovery compound
+  
+  geom_line(data = d.opt.sorbent.recovery %&gt;% filter(compound %in% cmpd.lowRecovery),
+            aes(group = compound), position = position_dodge(dg), linetype = &quot;dotted&quot;) +
+  
+  geom_errorbar(data = d.opt.sorbent.recovery %&gt;% filter(compound %in% cmpd.lowRecovery),
+                aes(ymin = recovery.mean - recovery.sd,
+                    ymax = recovery.mean + recovery.sd),
+                position = position_dodge(dg), size = .1, width = .1) +
+  
+  geom_point(data = d.opt.sorbent.recovery %&gt;% filter(compound %in% cmpd.lowRecovery),
+             aes(group = compound), position = position_dodge(dg),
+             shape = 21, fill = &quot;white&quot;, size = 2, stroke = 1) +
+  
+  # fill with transparent color
+  geom_point(data = d.opt.sorbent.recovery %&gt;% filter(compound %in% cmpd.lowRecovery),
+             aes(group = compound), position = position_dodge(dg),
+             shape = 21, size = 2, alpha = .6) +
+  
+  geom_text_repel(data = d.opt.sorbent.recovery %&gt;% filter(compound %in% cmpd.lowRecovery),
+                  aes(label = compound), size = 3, fontface = &quot;bold&quot;,
+                  position = position_dodge(dg)) +
+  labs(y = &quot;Recovery (%)&quot;, x = &quot;Sorbent&quot;) +
+  scale_color_manual(values = color.cmpd) +
+  scale_fill_manual(values = color.cmpd) 
+
+# 7.5 X 8.9 Mac screen</code></pre>
+<pre class="r"><code>plt.sorbentOptimization</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-3-1.png" width="960" /></p>
+<pre class="r"><code>d.opt.sorbent.recovery %&gt;%
+  filter(compound %in% c(&quot;RK-Me&quot;, &quot;PhLiAce&quot;, &quot;4-HBOH&quot;)) %&gt;%
+  select(sorbent, compound, recovery.mean) %&gt;% spread(sorbent, recovery.mean)</code></pre>
+<pre><code>## # A tibble: 3 x 8
+##   compound `Sorbent free` `100 NP (big si… `100 NP` `75 NP-25 RP` `50 NP-50 RP`
+##   &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+## 1 4-HBOH           22.1               72.7     81.6          83.6          86.6
+## 2 PhLiAce           0.456             16.0     17.1          22.0          26.7
+## 3 RK-Me             0.952             66.4     60.0          68.3          69.2
+## # … with 2 more variables: `25 NP-75 RP` &lt;dbl&gt;, `100 RP` &lt;dbl&gt;</code></pre>
+<pre class="r"><code>d.opt.sorbent.recovery$compound %&gt;% n_distinct()</code></pre>
+<pre><code>## [1] 26</code></pre>
+<pre class="r"><code># Effect of sorbent mass
+d.opt.sorbent.mass = read_excel(path, sheet = &quot;sorbent mass&quot;)
+d.opt.sorbent.mass = d.opt.sorbent.mass %&gt;% 
+  gather(-c(`Data File`, code, `Acq. Date-Time`, `sorbent mass`), key = compound, value = resp) %&gt;%
+  group_by(compound) %&gt;%
+  mutate(resp.relative = resp / mean(resp)) 
+
+d.opt.sorbent.mass = d.opt.sorbent.mass %&gt;%
+  group_by(`sorbent mass`, compound) %&gt;%
+  summarise(resp.relative.mean = mean(resp.relative), resp.relative.sd = sd(resp.relative)) 
+d.opt.sorbent.mass</code></pre>
+<pre><code>## # A tibble: 78 x 4
+## # Groups:   sorbent mass [3]
+##    `sorbent mass` compound  resp.relative.mean resp.relative.sd
+##    &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;
+##  1 1~5 mg         3-HBA                   1.06           0.0362
+##  2 1~5 mg         3-HPAA                  1.03           0.0222
+##  3 1~5 mg         3-HPPA                  1.10           0.0828
+##  4 1~5 mg         3,4-DHBA                1.21           0.304 
+##  5 1~5 mg         3,4-DHPAA               1.50           0.596 
+##  6 1~5 mg         3,4-DHPE                1.18           0.192 
+##  7 1~5 mg         3,4-DHPPA               1.23           0.543 
+##  8 1~5 mg         4-HBA                   1.06           0.0762
+##  9 1~5 mg         4-HBOH                  1.07           0.0145
+## 10 1~5 mg         4-HCA                   1.07           0.0779
+## # … with 68 more rows</code></pre>
+<pre class="r"><code>plt.sorbent.mass = d.opt.sorbent.mass %&gt;%
+  ggplot(aes(x = `sorbent mass`, y = resp.relative.mean, color = compound)) +
+  geom_boxplot(aes(group = `sorbent mass`), outlier.alpha = 0) +
+  geom_errorbar(aes(ymin = resp.relative.mean - resp.relative.sd,
+                    ymax = resp.relative.mean + resp.relative.sd),
+                position = position_dodge(.5), size = .2, width = 1.2) +
+  geom_point(position = position_dodge(.5), shape = 21, fill = &quot;white&quot;) +
+  theme(legend.position = &quot;none&quot;) +
+  coord_cartesian(ylim = c(.5, 1.6)) +
+  scale_y_continuous(breaks = seq(.6, 1.6, .2)) +
+  labs(y = &quot;Relative peak intensity&quot;, caption = &quot;Reconstituted in 100 uL 60% MeOH 0.1% FA before LCMS analysis&quot;)
+
+plt.sorbent.mass</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># &lt;&gt;0^%@#$!)(*&amp;^$##&amp;$)^$(^#!~#$)# &lt;&gt;0^%@#$!)(*&amp;^$##&amp;$)^$(^#!~#$)# &lt;&gt;0^%@#$!)(*&amp;^$##&amp;$)^$(^#!~#$)# &lt;&gt;0^%@#$!)(*&amp;^$##&amp;$)^$(^#!~#$)</code></pre>
+</div>
+<div id="accuracy-validation" class="section level1">
+<h1>Accuracy validation</h1>
+<pre class="r"><code># Validation
+d.conc = read_excel(path, sheet = &quot;calculated concentration&quot;)
+d.conc = d.conc %&gt;% 
+  gather(-c(`Data File`, Name, `Acq. Date-Time`), key = compound, value = conc) %&gt;%
+  select(-`Acq. Date-Time`)
+
+# blank concentration
+d.conc.blk = d.conc %&gt;% filter(Name == &quot;Adi + Enz&quot;) %&gt;% 
+  select(-c(Name, `Data File`)) %&gt;%
+  group_by(compound) %&gt;%
+  summarise(conc.blk.mean = mean(conc, na.rm = T),
+            conc.blk.sd = sd(conc, na.rm = T))
+
+# total measured conc. (spiked + background)
+d.ABCD = d.conc %&gt;% filter(Name %in% c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)) %&gt;%
+  group_by(compound, Name) %&gt;%
+  summarise(conc.all.mean = mean(conc, na.rm = T),
+            conc.all.sd = sd(conc, na.rm = T))
+
+# subract background
+d.ABCD = d.ABCD %&gt;% left_join(d.conc.blk, by = &quot;compound&quot;) %&gt;%
+  mutate(conc.spk.mean = conc.all.mean - conc.blk.mean,
+         conc.spk.sd = (conc.all.sd^2 + conc.blk.sd^2) %&gt;% sqrt()) %&gt;%
+  select(compound, Name, contains(&quot;spk&quot;))
+
+
+# Expected spiked amount
+d.expect = read_excel(path, sheet = &quot;stock solution&quot;, range = &quot;B2:O28&quot;) %&gt;%
+  select(compound, A, B, C, D)
+
+d.expect = d.expect %&gt;%
+  gather(-compound, key = Name, value = conc.expected)
+
+
+# Compute Accuracy
+d.ABCD = d.ABCD %&gt;% left_join(d.expect, by = c(&quot;compound&quot;, &quot;Name&quot;)) %&gt;%
+  mutate(Accuracy.mean = conc.spk.mean / conc.expected * 100,
+         Accuracy.sd = conc.spk.sd / conc.expected * 100) %&gt;% 
+  # add spike concentration level
+  ungroup() %&gt;%
+  mutate(level = rep(c(&quot;2000&quot;, &quot;500&quot;, &quot;100&quot;, &quot;20&quot;), time = d.ABCD$compound %&gt;% n_distinct()),
+         level = factor(level, levels = c(&quot;2000&quot;, &quot;500&quot;, &quot;100&quot;, &quot;20&quot;), ordered = T))  
+
+# 3,4-DHPPA D level below limit of quantification
+d.ABCD = d.ABCD %&gt;% filter(! ((compound == &quot;3,4-DHPPA&quot;) &amp; (Name == &quot;D&quot;)))
+
+
+# accuracy box plot
+dg = .4</code></pre>
+<pre class="r"><code>plt.accuracy = d.ABCD %&gt;%
+  ggplot(aes(x = level, y = Accuracy.mean, color = compound, fill = compound)) +
+  
+  geom_boxplot(outlier.alpha = 0, aes(group = Name), fill = &quot;grey&quot;, width = .8) +
+  
+  geom_errorbar(aes(ymin = Accuracy.mean - Accuracy.sd,
+                    ymax = Accuracy.mean + Accuracy.sd ),
+                size = .2, width = 1, position = position_dodge(dg)) +
+  
+  geom_point(position = position_dodge(dg), shape = 21, fill = &quot;white&quot;, size = 4.5) +
+  geom_point(position = position_dodge(dg), shape = 21, alpha = 0.2, size = 4.5) +
+  
+  theme(legend.position = &quot;None&quot;, panel.grid = element_blank()) +
+  scale_y_continuous(breaks = seq(0, 180, by = 20)) +
+  
+  geom_text_repel(data = d.ABCD %&gt;% 
+                    filter(Accuracy.mean &gt; 140 | Accuracy.mean &lt; 60 ),
+                  aes(label = compound), size = 5, position = position_dodge(dg)) +
+  
+  coord_cartesian(ylim = c(0, 180)) +
+  
+  annotate(&quot;segment&quot;, x = .5, xend = 4.5, y = 120, yend = 120, 
+           linetype = &quot;dashed&quot;, size = .6, color = &quot;firebrick&quot;) +
+  annotate(&quot;segment&quot;, x = .5, xend = 4.5, y = 80, yend = 80, 
+           linetype = &quot;dashed&quot;, size = .6, color = &quot;firebrick&quot;) +
+  
+  annotate(&quot;segment&quot;, x = .5, xend = 4.5, y = 100, yend = 100, 
+           linetype = &quot;dashed&quot;, size = .6, color = &quot;darkgreen&quot;) +
+  
+  scale_color_manual(values = color.cmpd) +
+  scale_fill_manual(values = color.cmpd) +
+  labs(y = &quot;Accuracy&quot;, x = &quot;Spiked concentration of final injection (ng/mL)&quot;)</code></pre>
+<pre class="r"><code>plt.accuracy</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
+<pre class="r"><code># annotation standard: Accuracy.mean &gt; 140 | Accuracy.mean &lt; 60 | Accuracy.sd &gt; 50
+
+d.ABCD %&gt;% filter(Accuracy.sd &gt; 50) </code></pre>
+<pre><code>## # A tibble: 3 x 8
+##   compound Name  conc.spk.mean conc.spk.sd conc.expected Accuracy.mean Accuracy.sd level
+##   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt; &lt;ord&gt;
+## 1 4-HBA    D              7.77        22.1          17.5          44.4       126.  20   
+## 2 4-HPAA   D             18.1         12.3          19.4          93.1        63.1 20   
+## 3 CA       D             32.4         16.7          21.7         149.         76.7 20</code></pre>
+<pre class="r"><code># &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^</code></pre>
+</div>
+<div id="stepwise-recovery-validation" class="section level1">
+<h1>Stepwise recovery validation</h1>
+<pre class="r"><code># Recovery at each step
+d.area = read_excel(path, sheet = &quot;peak area&quot;)
+d.area = d.area %&gt;% 
+  gather(-c(`Data File`, Name, `Acq. Date-Time`), key = compound, value = area)
+
+d.area.copy = d.area # make a copy for later use with comparison with internal standard
+
+# background 
+d.area.blk = d.area %&gt;% filter(Name == &quot;Adi + Enz&quot;) %&gt;% 
+  group_by(compound) %&gt;%
+  summarise(area.blk.mean = mean(area, na.rm = T),
+            area.blk.sd = sd(area, na.rm = T))
+
+# total area at each step ( spiked + background )
+d.area.steps = d.area %&gt;% 
+  filter(Name %in% c(&quot;B&quot;, &quot;C&quot;, &quot;PX&quot;, &quot;PC&quot;, &quot;PR&quot;, &quot;PR neat&quot;, &quot;no silica gel&quot;, &quot;PR neat&quot;)) %&gt;%
+  group_by(compound, Name) %&gt;%
+  summarise(area.mean = mean(area, na.rm = T),
+            area.sd = sd(area, na.rm = T))
+#good
+
+# subtract background
+d.area.steps = d.area.steps %&gt;% left_join(d.area.blk, by = &quot;compound&quot;) %&gt;%
+  mutate(area.spk.mean = area.mean - area.blk.mean,
+         area.spk.sd = (area.sd^2 + area.blk.sd^2) %&gt;% sqrt()) %&gt;%
+  select(compound, Name, contains(&quot;spk&quot;))
+d.area.steps  </code></pre>
+<pre><code>## # A tibble: 182 x 4
+## # Groups:   compound [26]
+##    compound Name          area.spk.mean area.spk.sd
+##    &lt;chr&gt;    &lt;chr&gt;                 &lt;dbl&gt;       &lt;dbl&gt;
+##  1 3-HBA    B                    18195.      1554. 
+##  2 3-HBA    C                     3564.       249. 
+##  3 3-HBA    no silica gel         3845.       288. 
+##  4 3-HBA    PC                   23085.      1431. 
+##  5 3-HBA    PR                   23494.       727. 
+##  6 3-HBA    PR neat              30583.      1915. 
+##  7 3-HBA    PX                   20413.      1060. 
+##  8 3-HPAA   B                     6893.       491. 
+##  9 3-HPAA   C                     1320.       123. 
+## 10 3-HPAA   no silica gel         1535.        74.5
+## # … with 172 more rows</code></pre>
+<pre class="r"><code># spread apart steps into separate columns
+x = d.area.steps %&gt;% select(-area.spk.sd) %&gt;% 
+  spread(key = Name, value = area.spk.mean)
+colnames(x) = c(&quot;compound&quot;, colnames(x)[-1] %&gt;% str_c(&quot;.mean&quot;))
+
+y = d.area.steps %&gt;% select(-area.spk.mean) %&gt;% 
+  spread(key = Name, value = area.spk.sd)
+colnames(y) = c(&quot;compound&quot;, colnames(y)[-1] %&gt;% str_c(&quot;.sd&quot;))
+y</code></pre>
+<pre><code>## # A tibble: 26 x 8
+## # Groups:   compound [26]
+##    compound    B.sd  C.sd `no silica gel.sd` PC.sd PR.sd `PR neat.sd` PX.sd
+##    &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1 3-HBA      1554.  249.              288.  1431.  727.        1915. 1060.
+##  2 3-HPAA      491.  123.               74.5  489.  397.         666.  316.
+##  3 3-HPPA     2908.  936.              281.  3529. 1474.        2419. 1433.
+##  4 3,4-DHBA   4313.  971.              658.  4378. 2164.        3125. 1887.
+##  5 3,4-DHPAA  2733.  502.              377.  2327. 1664.        3092.  988.
+##  6 3,4-DHPE    811.  147.               83.6  707.  448.        1305.  810.
+##  7 3,4-DHPPA  2083.  359.              107.  3207. 3292.        3641. 1859.
+##  8 4-HBA     10031. 5853.             2516.  7081. 3001.        6918. 4978.
+##  9 4-HBOH      933.  232.              102.  2094. 1614.        4045. 1576.
+## 10 4-HCA      1983.  459.              360.  2743. 1404.        3480. 1681.
+## # … with 16 more rows</code></pre>
+<pre class="r"><code>d.area.steps = left_join(x, y, by = &quot;compound&quot;)
+
+
+# recovery at each steps (now background subtracted)
+d.recovery = d.area.steps %&gt;%
+  mutate(
+    # extraction (relative to spike amount of post extraction or PX)
+    rec.extraction.mean = B.mean / PX.mean  * 100, 
+    rec.extraction.sd = sqrt((PX.sd / PX.mean)^2 + (B.sd / B.mean)^2) * rec.extraction.mean,
+    
+    # EMR clean up (relative to spike amount of post clean up or PC)
+    rec.EMR.mean = PX.mean / PC.mean * 100,
+    rec.EMR.sd = sqrt((PX.sd / PX.mean)^2 + (PC.sd / PC.mean)^2)* rec.EMR.mean,
+    
+    # SpeedVac drying &amp; reconstitution (relative to spike amount of post reconstitution or PR)
+    rec.DryReconstitute.mean = PC.mean / PR.mean * 100, 
+    rec.DryReconstitute.sd = sqrt((PC.sd / PC.mean)^2 + (PR.sd / PR.mean)^2) * rec.DryReconstitute.mean,
+    
+    # # add silica gel effect (relative to without, using spike level C)
+    # sorbent.mean = C.mean  / `no silica gel.mean`, # (improvenment fold), with improvement &gt; 1
+    # sorbent.sd = sqrt((`no silica gel.sd` / `no silica gel.mean`)^2 + (C.sd / C.mean)^2) * sorbent.mean,
+    
+    # Overall recovery 
+    rec.Overall.mean = B.mean / PR.mean * 100,
+    rec.Overall.sd = sqrt((B.sd / B.mean)^2 + (PR.sd/ PR.mean)^2) * rec.Overall.mean,
+    
+    # matrix effect to ESI
+    matrixESI.mean = PR.mean / `PR neat.mean` * 100,
+    matrixESI.sd = sqrt((PR.sd / PR.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * matrixESI.mean,
+    
+    # Overall processing efficiency
+    process.eff.mean = B.mean / `PR neat.mean` * 100,
+    process.eff.sd = sqrt((B.sd / B.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * process.eff.mean) %&gt;%
+  
+  select(compound, contains(&quot;rec&quot;), contains(&quot;ESI&quot;), contains(&quot;process&quot;))
+
+
+x = d.recovery %&gt;%
+  select(compound, contains(&quot;mean&quot;)) %&gt;%
+  gather(-compound, key = step, value = mean) %&gt;%
+  mutate(step = str_remove(step, pattern = &quot;.mean&quot;))
+
+y = d.recovery %&gt;%
+  select(compound, contains(&quot;sd&quot;)) %&gt;%
+  gather(-compound, key = step, value = sd) %&gt;%
+  mutate(step = str_remove(step, pattern = &quot;.sd&quot;))
+y</code></pre>
+<pre><code>## # A tibble: 156 x 3
+## # Groups:   compound [26]
+##    compound  step              sd
+##    &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+##  1 3-HBA     rec.extraction  8.91
+##  2 3-HPAA    rec.extraction  7.39
+##  3 3-HPPA    rec.extraction  7.61
+##  4 3,4-DHBA  rec.extraction  9.13
+##  5 3,4-DHPAA rec.extraction 14.2 
+##  6 3,4-DHPE  rec.extraction 21.5 
+##  7 3,4-DHPPA rec.extraction 23.9 
+##  8 4-HBA     rec.extraction 13.8 
+##  9 4-HBOH    rec.extraction 16.3 
+## 10 4-HCA     rec.extraction  7.07
+## # … with 146 more rows</code></pre>
+<pre class="r"><code>d.recovery.tidy = x %&gt;% left_join(y, by = c(&quot;compound&quot;, &quot;step&quot;))
+
+# compound wise
+# d.recovery.tidy %&gt;%
+#   ggplot(aes(x = compound, y = mean, color = step)) +
+#   geom_point(position = position_dodge(dg)) +
+#   coord_flip()
+
+# overview
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;rec.extraction&quot;, replacement = &quot;Extraction&quot;)
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;rec.EMR&quot;, replacement = &quot;Enhanced matrix removal&quot;)
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;rec.DryReconstitute&quot;, replacement = &quot;Dry &amp; reconstitute&quot;)
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;rec.Overall&quot;, replacement = &quot;Overall recovery&quot;)
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;matrixESI&quot;, replacement = &quot;Matrix effect (ESI)&quot;)
+d.recovery.tidy$step = d.recovery.tidy$step %&gt;% str_replace(pattern = &quot;process.eff&quot;, replacement = &quot;Overall processing efficiency&quot;)
+
+d.recovery.tidy$step = factor(d.recovery.tidy$step, levels = d.recovery.tidy$step %&gt;% unique(), ordered = T)
+
+plt.recovery.steps = d.recovery.tidy %&gt;% 
+  ggplot(aes(x = step, y = mean, color = compound, fill = compound)) +
+  geom_boxplot(outlier.alpha = 0, fill = &quot;grey&quot;, aes(group = step)) +
+  
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                position = position_dodge(dg), 
+                size = .2, width = 1) +
+  geom_point(position = position_dodge(dg),
+             shape = 21, size = 3, stroke = 1, fill = &quot;white&quot;) +
+  
+  geom_point(position = position_dodge(dg),
+             shape = 21, size = 3, stroke = 1, alpha = .2) +
+  
+  annotate(&quot;segment&quot;, x = .5, xend = 6.5, y = 100, yend = 100, 
+           linetype = &quot;dashed&quot;, size = .4, color = &quot;darkgreen&quot;) +
+  annotate(&quot;segment&quot;, x = .5, xend = 6.5, y = 80, yend = 80, 
+           linetype = &quot;dashed&quot;, size = .4, color = &quot;firebrick&quot;) +
+  
+  coord_cartesian(ylim = c(20, 140)) +
+  scale_y_continuous(breaks = seq(0, 200, by = 10)) +
+  scale_color_manual(values = color.cmpd) +
+  scale_fill_manual(values = color.cmpd) +
+  theme(legend.position = &quot;None&quot;) +
+  labs(x = &quot; &quot;) +
+  
+  geom_text_repel(data = d.recovery.tidy %&gt;% filter(mean &gt; 110 | mean &lt;= 50), 
+                  aes(label = compound), position = position_dodge(dg), size = 3)</code></pre>
+<pre class="r"><code>plt.recovery.steps</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-10-1.png" width="960" /></p>
+<pre class="r"><code># *&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;*&lt;^%#^&amp;*$#@!%$#^&amp;</code></pre>
+</div>
+<div id="sorbent-effect-revisit" class="section level1">
+<h1>Sorbent effect revisit</h1>
+<pre class="r"><code># sorbent improvement effect
+# For this section the peak area should NOT subtract background since background is measured WITH sorbent. The with sorbent and without sorbent should be compared directly with background content included
+d.area.sorbent = d.area %&gt;% filter(Name %in% c(&quot;C&quot;, &quot;no silica gel&quot;)) %&gt;%
+  group_by(compound, Name) %&gt;%
+  summarise(area.mean = mean(area),
+            area.sd = sd(area))
+
+
+x = d.area.sorbent %&gt;% select(-area.sd) %&gt;% spread(key = Name, value = area.mean)
+colnames(x) = c(&quot;compound&quot;, &quot;C.mean&quot;, &quot;no silica gel.mean&quot;)
+
+y = d.area.sorbent %&gt;% select(-area.mean) %&gt;% spread(key = Name, value = area.sd)
+colnames(y) = c(&quot;compound&quot;, &quot;C.sd&quot;, &quot;no silica gel.sd&quot;)
+
+d.area.sorbent = left_join(x, y, by = &quot;compound&quot;) %&gt;%
+  mutate(sorbent.mean = C.mean / `no silica gel.mean`,
+         sorbent.sd = C.sd / `no silica gel.sd`)
+
+dg. =5
+plt.sorbent.validate = d.area.sorbent %&gt;% 
+  ggplot(aes(x = 1, y = sorbent.mean, color = compound, fill = compound)) +
+  geom_boxplot(outlier.alpha = 0, fill = &quot;grey&quot;, aes(group = 1)) +
+  
+  geom_errorbar(aes(ymin = sorbent.mean - sorbent.sd, 
+                    ymax = sorbent.mean + sorbent.sd),
+                position = position_dodge(dg),
+                size = .2, width = 1) +
+  geom_point(position = position_dodge(dg),
+             shape = 21, size = 3, stroke = 1, fill = &quot;white&quot;) +
+  
+  geom_point(position = position_dodge(dg),
+             shape = 21, size = 3, stroke = 1, alpha = .2) +
+  
+  annotate(&quot;segment&quot;, x = .5, xend = 1.5, y = 1, yend = 1, 
+           linetype = &quot;dashed&quot;, size = .4, color = &quot;darkgreen&quot;) +
+  scale_color_manual(values = color.cmpd) +
+  scale_fill_manual(values = color.cmpd) +
+  theme(legend.position = &quot;None&quot;,
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())  +
+  labs(x = &quot;&quot;, y = &quot;Fold increase of peak area with sorbent than without &quot;) +
+  
+  geom_text_repel(data = d.area.sorbent %&gt;% filter(sorbent.mean &gt; 2),
+                  aes(label = compound), position = position_dodge(dg), size = 3) +
+  # scale_y_continuous(breaks = seq(0, 7, 1))+
+  coord_cartesian(ylim = c(0, 6))</code></pre>
+<pre class="r"><code>plt.sorbent.validate</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code>#0*^$@$^!#%&amp;*#0*^$@$^!#%&amp;*#0*^$@$^!#%&amp;*#0*^$@$^!#%&amp;*#0*^$@$^!#%&amp;*#0*^$@$^!#%&amp;*#0*^$@</code></pre>
+</div>
+<div id="istd-corrected-stepwise-recovery" class="section level1">
+<h1>ISTD-corrected stepwise recovery</h1>
+<pre class="r"><code># Recovery with internal standard correcting the loss effect
+
+# IS area in each sample file
+d.area.IS1 = read_excel(path, sheet = &quot;IS1 peak area&quot;)
+d.area.IS2 = read_excel(path, sheet = &quot;IS2 peak area&quot;) 
+
+d.area.IS = d.area.IS1 %&gt;% 
+  left_join(d.area.IS2 %&gt;% select(-c(`Acq. Date-Time`, Name)),
+            by = c(&quot;Data File&quot;))
+
+# d.area.IS[!complete.cases(d.area.IS), ]
+
+# Compounds vs. IS
+d.IS = read_excel(path, sheet = &quot;IS&quot;)
+
+
+# Compoute area corrected 
+d.area.corrected = d.area.copy %&gt;% 
+  filter(Name %in% c(&quot;B&quot;, &quot;PX&quot;, &quot;PC&quot;, &quot;PR&quot;, &quot;PR neat&quot;)) %&gt;%
+  
+  # subtract background on a sample wise manner
+  left_join(d.area.blk, by = &quot;compound&quot;) %&gt;%
+  mutate(spk.mean = area - area.blk.mean,
+         spk.sd = area.blk.sd) %&gt;%
+  select(-c(area, contains(&quot;blk&quot;))) %&gt;%
+  # which IS
+  left_join(d.IS, by = &quot;compound&quot;) 
+
+# compounds using 4-HBA as IS
+x = d.area.corrected %&gt;% filter(IS == &quot;4-HBA-d4&quot;) %&gt;%
+  left_join(d.area.IS %&gt;% select(`Data File`, `4-HBA-d4`), by = &quot;Data File&quot;) %&gt;%
+  rename(area.IS = `4-HBA-d4`)
+
+# compounds using cinnamic acid as IS
+y = d.area.corrected %&gt;% filter(IS == &quot;cinnamic-d6&quot;) %&gt;%
+  left_join(d.area.IS %&gt;% select(`Data File`, `cinnamic-d6`), by = &quot;Data File&quot;) %&gt;%
+  rename(area.IS = `cinnamic-d6`)
+
+# combine 2 IS&#39;s
+d.area.corrected = rbind(x, y)
+
+d.area.corrected = d.area.corrected %&gt;%
+  select(-c(`Data File`, `Acq. Date-Time`)) %&gt;%
+  # now area corrected with area of IS, shown as the ratio
+  mutate(ratio = spk.mean / area.IS,
+         ratio.sd = spk.sd / area.IS) %&gt;%
+  select(-contains(&quot;spk&quot;), -contains(&quot;IS&quot;))
+
+d.area.corrected = d.area.corrected %&gt;% 
+  group_by(Name, compound) %&gt;%
+  summarise(ratio.mean = mean(ratio, na.rm = T),
+            ratio.sd = sd(ratio, na.rm = T))
+
+# d.area.corrected[!complete.cases(d.area.corrected), ]
+
+
+# spread columns apart
+x = d.area.corrected %&gt;% select(-ratio.sd) %&gt;%
+  spread(key = Name, value = ratio.mean)
+colnames(x) = c(&quot;compound&quot;, colnames(x)[-1] %&gt;% str_c(&quot;.mean&quot;) )
+
+y = d.area.corrected %&gt;% select(-ratio.mean) %&gt;%
+  spread(key = Name, value = ratio.sd)
+colnames(y) = c(&quot;compound&quot;, colnames(y)[-1] %&gt;% str_c(&quot;.sd&quot;) )
+
+d.area.corrected = left_join(x, y, by = &quot;compound&quot;)
+
+# compute recovery corrected by IS
+d.recovery.corrected = d.area.corrected %&gt;%
+  # the recovery code format is the same as above without correction
+  mutate(
+    # extraction (relative to spike amount of post extraction or PX)
+    rec.extraction.mean = B.mean / PX.mean  * 100, 
+    rec.extraction.sd = sqrt((PX.sd / PX.mean)^2 + (B.sd / B.mean)^2) * rec.extraction.mean,
+    
+    # EMR clean up (relative to spike amount of post clean up or PC)
+    rec.EMR.mean = PX.mean / PC.mean * 100,
+    rec.EMR.sd = sqrt((PX.sd / PX.mean)^2 + (PC.sd / PC.mean)^2)* rec.EMR.mean,
+    
+    # SpeedVac drying &amp; reconstitution (relative to spike amount of post reconstitution or PR)
+    rec.DryReconstitute.mean = PC.mean / PR.mean * 100, 
+    rec.DryReconstitute.sd = sqrt((PC.sd / PC.mean)^2 + (PR.sd / PR.mean)^2) * rec.DryReconstitute.mean,
+    
+    # # add silica gel effect (relative to without, using spike level C)
+    # sorbent.mean = C.mean  / `no silica gel.mean`, # (improvenment fold), with improvement &gt; 1
+    # sorbent.sd = sqrt((`no silica gel.sd` / `no silica gel.mean`)^2 + (C.sd / C.mean)^2) * sorbent.mean,
+    
+    # Overall recovery 
+    rec.Overall.mean = B.mean / PR.mean * 100,
+    rec.Overall.sd = sqrt((B.sd / B.mean)^2 + (PR.sd/ PR.mean)^2) * rec.Overall.mean,
+    
+    # matrix effect to ESI
+    matrixESI.mean = PR.mean / `PR neat.mean` * 100,
+    matrixESI.sd = sqrt((PR.sd / PR.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * matrixESI.mean,
+    
+    # Overall processing efficiency
+    process.eff.mean = B.mean / `PR neat.mean` * 100,
+    process.eff.sd = sqrt((B.sd / B.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * process.eff.mean) %&gt;%
+  
+  select(compound, contains(&quot;rec&quot;), contains(&quot;ESI&quot;), contains(&quot;process&quot;))
+
+d.recovery.corrected</code></pre>
+<pre><code>## # A tibble: 26 x 13
+##    compound rec.extraction.… rec.extraction.… rec.EMR.mean rec.EMR.sd rec.DryReconsti…
+##    &lt;chr&gt;               &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;
+##  1 3-HBA                95.1             5.42         98.3       5.46            103. 
+##  2 3-HPAA               95.9             6.83         98.0       5.42            103. 
+##  3 3-HPPA              126.             12.9          98.5      11.9             131. 
+##  4 3,4-DHBA             94.5             5.56         95.1       6.90            105. 
+##  5 3,4-DHP…             84.6            14.6          92.0      10.8              87.1
+##  6 3,4-DHPE             78.8            24.6          85.9      21.1              45.2
+##  7 3,4-DHP…             96.7            30.5          96.6      29.2              61.3
+##  8 4-HBA                99.9             9.77         92.7       6.45            104. 
+##  9 4-HBOH               85.0            18.6          87.8      23.5              30.2
+## 10 4-HCA                84.0             6.21         78.8       3.91            102. 
+## # … with 16 more rows, and 7 more variables: rec.DryReconstitute.sd &lt;dbl&gt;,
+## #   rec.Overall.mean &lt;dbl&gt;, rec.Overall.sd &lt;dbl&gt;, matrixESI.mean &lt;dbl&gt;,
+## #   matrixESI.sd &lt;dbl&gt;, process.eff.mean &lt;dbl&gt;, process.eff.sd &lt;dbl&gt;</code></pre>
+<pre class="r"><code># colnames(d.recovery.corrected) = c(&quot;compound&quot;, str_c(&quot;crrct.&quot;, colnames(d.recovery.corrected)[-1]))
+# d.recovery.corrected
+
+
+# -------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------&lt;&gt;-------
+
+x = d.recovery.corrected %&gt;%
+  select(compound, contains(&quot;mean&quot;)) %&gt;%
+  gather(-compound, key = step, value = mean) %&gt;%
+  mutate(step = str_remove(step, pattern = &quot;.mean&quot;))
+
+y = d.recovery.corrected %&gt;%
+  select(compound, contains(&quot;sd&quot;)) %&gt;%
+  gather(-compound, key = step, value = sd) %&gt;%
+  mutate(step = str_remove(step, pattern = &quot;.sd&quot;))
+
+d.recovery.corrected.tidy = x %&gt;% left_join(y, by = c(&quot;compound&quot;, &quot;step&quot;))
+
+
+# combine dataset of recovery corrected and not corrected
+d.recovery.all = rbind(d.recovery.corrected.tidy %&gt;% mutate(corrected = &quot;ISTD-corrected&quot;) %&gt;% ungroup(), 
+                       d.recovery.tidy %&gt;% mutate(corrected = &quot;Absolute&quot;) %&gt;% ungroup())
+
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;rec.extraction&quot;, replacement = &quot;Extraction&quot;)
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;rec.EMR&quot;, replacement = &quot;Enhanced matrix removal&quot;)
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;rec.DryReconstitute&quot;, replacement = &quot;Dry &amp; reconstitute&quot;)
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;rec.Overall&quot;, replacement = &quot;Overall recovery&quot;)
+
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;matrixESI&quot;, replacement = &quot;Matrix effect (ESI)&quot;)
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;process.eff&quot;, replacement = &quot;Overall processing efficiency&quot;)
+
+
+# ordered step
+d.recovery.all$step = factor(d.recovery.all$step, levels = d.recovery.all$step %&gt;% unique(), ordered = T)
+
+
+
+# plot
+dg = .4
+
+plt.recovery.all = d.recovery.all %&gt;% 
+  ggplot(aes(x = corrected, y = mean)) +
+  facet_wrap(~step, nrow = 2) +
+  
+  geom_boxplot(outlier.alpha = 0, fill = &quot;grey&quot;) +
+  
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd, color = compound),
+                position = position_dodge(dg), 
+                size = .2, width = 1) +
+  
+  
+  geom_point(aes(color = compound),
+             position = position_dodge(dg),
+             size = 4.5, fill = &quot;white&quot;, shape = 21) +
+  
+  geom_point(aes(color = compound, fill = compound),
+             position = position_dodge(dg),
+             size = 4.5, shape = 21, alpha = .2) +
+  
+  # geom_point(position = position_dodge(dg),
+  #            shape = 21, size = 3, stroke = 1, alpha = .2) +
+  
+  coord_cartesian(ylim = c(0, 180)) +
+  scale_y_continuous(breaks = seq(0, 200, by = 20)) +
+  scale_color_manual(values = color.cmpd) +
+  scale_fill_manual(values = color.cmpd) +
+  theme(legend.position = &quot;None&quot;, panel.grid = element_blank()) +
+  labs(x = &quot;  &quot;) +
+  
+  # geom_text_repel(data = d.recovery.all$step %&gt;% filter(mean &gt; 110 | mean &lt;= 60), 
+  #                 aes(label = compound), position = position_dodge(dg), size = 3) +
+  
+  annotate(&quot;segment&quot;, x = .5, xend = 2.5, y = 120, yend = 120, 
+           linetype = &quot;dotted&quot;, size = .6, color = &quot;firebrick&quot;) +
+  annotate(&quot;segment&quot;, x = .5, xend = 2.5, y = 80, yend = 80, 
+           linetype = &quot;dotted&quot;, size = .6, color = &quot;firebrick&quot;) +
+  annotate(&quot;segment&quot;, x = .5, xend = 2.5, y = 100, yend = 100, 
+           linetype = &quot;dotted&quot;, size = .6, color = &quot;darkgreen&quot;) +
+  
+  geom_text_repel(data = d.recovery.all %&gt;% filter(mean &lt; 50 | mean &gt; 118 ),
+                  aes(label = compound, color = compound), size = 5)</code></pre>
+<pre class="r"><code>plt.recovery.all</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-16-1.png" width="960" /></p>
+<pre class="r"><code># grid.arrange(plt.accuracy, plt.recovery.all, nrow = 2)</code></pre>
+</div>
+<div id="accumulated-recovery" class="section level1">
+<h1>Accumulated recovery</h1>
+<pre class="r"><code># Compound-stepwise recovery (accumulative effect) Not corrected
+d.recovery.cummulated = d.recovery.all %&gt;% filter(corrected == &quot;Absolute&quot; ) %&gt;%
+  # filter(compound == &quot;4-HBA&quot;) %&gt;%
+  select(-sd, -corrected) %&gt;%
+  spread(key = step, value = mean)
+
+d.recovery.cummulated = d.recovery.cummulated %&gt;%
+  mutate(Start = 100 + rnorm(n = nrow(d.recovery.cummulated), mean = 0, sd = 0), 
+         # some random noise over 100 to avoid overlap
+         
+         Extraction.0 = Start,
+         Extraction.1 = Extraction,
+         
+         EMR.0 = Extraction.1,
+         EMR.1 = Extraction.1 * `Enhanced matrix removal` / 100,
+         
+         Dry.0 = EMR.1, 
+         Dry.1 = EMR.1 * `Dry &amp; reconstitute` / 100,
+         
+         matrixEffect.0 = Dry.1,
+         matrixEffect.1 = Dry.1 * `Matrix effect (ESI)` / 100, 
+         Detected = matrixEffect.1) %&gt;%
+  select(compound, Start, contains(&quot;.0&quot;), contains(&quot;.1&quot;), Detected) %&gt;%
+  gather(-compound, key = step, value = recovery.cummulated)
+
+
+# make a copy for later marking the plot the position of accumulated recovery on the y axis (horizontal line)
+ymark = d.recovery.cummulated[d.recovery.cummulated$step %&gt;% str_detect(pattern = &quot;.1&quot;), ]
+ymark$step = ymark$step %&gt;% str_remove(pattern = &quot;.1&quot;)
+ymark = ymark %&gt;% mutate(status = &quot;Absolute&quot;)
+
+
+d.recovery.cummulated$step = d.recovery.cummulated$step %&gt;% str_remove(pattern = &quot;.0&quot;)  
+d.recovery.cummulated$step = d.recovery.cummulated$step %&gt;% str_remove(pattern = &quot;.1&quot;)  
+
+d.recovery.cummulated$step = d.recovery.cummulated$step %&gt;% 
+  factor(levels = d.recovery.cummulated$step %&gt;% unique(), ordered = T)
+
+
+# add IS. label
+d.recovery.cummulated = 
+  d.recovery.cummulated %&gt;% left_join(d.IS, by = &quot;compound&quot;)
+
+# d.recovery.cummulated %&gt;% as.data.frame()
+
+#&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-&lt;&gt;-
+
+# Compound-stepwise recovery (accumulative effect) Corrected
+
+# d.recovery.all %&gt;% arrange(compound, step) %&gt;% as.data.frame()
+
+
+d.recovery.cummulated.corrected = d.recovery.all %&gt;% 
+  filter(corrected == &quot;ISTD-corrected&quot; ) %&gt;%
+  select(-sd, -corrected) %&gt;%
+  spread(key = step, value = mean)
+
+d.recovery.cummulated.corrected = d.recovery.cummulated.corrected %&gt;%
+  mutate(Start = 100, 
+         # may also consider adding some random noise over 100 to avoid overlap
+         
+         Extraction.0 = Start,
+         Extraction.1 = Extraction,
+         
+         EMR.0 = Extraction.1,
+         EMR.1 = Extraction.1 * `Enhanced matrix removal` / 100,
+         
+         Dry.0 = EMR.1, 
+         Dry.1 = EMR.1 * `Dry &amp; reconstitute` / 100,
+         
+         matrixEffect.0 = Dry.1,
+         matrixEffect.1 = Dry.1 * `Matrix effect (ESI)` / 100, 
+         Detected = matrixEffect.1) %&gt;%
+  select(compound, Start, contains(&quot;.0&quot;), contains(&quot;.1&quot;), Detected) %&gt;%
+  gather(-compound, key = step, value = recovery.cummulated)
+
+# d.recovery.cummulated.corrected %&gt;% as.data.frame()
+
+
+
+# make a copy for later marking the plot the position of accumulated recovery on the y axis
+ymark.corrected = d.recovery.cummulated.corrected[d.recovery.cummulated.corrected$step %&gt;% str_detect(pattern = &quot;.1&quot;), ]
+ymark.corrected$step = ymark.corrected$step %&gt;% str_remove(pattern = &quot;.1&quot;)
+ymark.corrected = ymark.corrected %&gt;% mutate(status = &quot;ISTD-corrected&quot;)
+
+
+d.recovery.cummulated.corrected$step = d.recovery.cummulated.corrected$step %&gt;% str_remove(pattern = &quot;.0&quot;)  
+d.recovery.cummulated.corrected$step = d.recovery.cummulated.corrected$step %&gt;% str_remove(pattern = &quot;.1&quot;)  
+
+d.recovery.cummulated.corrected$step = d.recovery.cummulated.corrected$step %&gt;% 
+  factor(levels = d.recovery.cummulated.corrected$step %&gt;% unique(), ordered = T)
+
+# d.recovery.cummulated.corrected %&gt;% 
+#   arrange(compound, step) %&gt;% as.data.frame() # so far correct
+
+
+# add IS. label
+d.recovery.cummulated.corrected = 
+  d.recovery.cummulated.corrected %&gt;% left_join(d.IS, by = &quot;compound&quot;)
+
+
+# d.recovery.cummulated.corrected %&gt;%
+#   arrange(compound) %&gt;% as.data.frame()
+
+
+
+# Combine both dataset
+d.recovery.cummulated.all = d.recovery.cummulated.corrected %&gt;% mutate(status = &quot;ISTD-corrected&quot;) %&gt;%
+  rbind(d.recovery.cummulated %&gt;% mutate(status = &quot;Absolute&quot;))
+
+# d.recovery.cummulated.all %&gt;%
+#   arrange(compound, status) %&gt;% as.data.frame()
+
+
+#plot
+dg = .2
+
+# plot 1</code></pre>
+<pre class="r"><code>d.recovery.cummulated.all %&gt;%
+  ggplot(aes(x = step, y = recovery.cummulated, color = compound)) +
+  geom_line(aes(group = compound), position = position_dodge(dg), alpha = .7) +
+  theme(legend.position = &quot;None&quot;, 
+        panel.grid = element_blank()) +
+  scale_y_continuous(breaks = seq(0, d.recovery.cummulated.corrected$recovery.cummulated %&gt;% max(), by = 10)) +
+  facet_wrap(~status, nrow = 1) +
+  scale_color_manual(values = color.cmpd) +
+  labs(x = &quot;  &quot;, y = &quot;Recovery (%)&quot;)</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<pre class="r"><code># plot 2
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;Enhanced matrix removal&quot;, replacement = &quot;EMR&quot;)
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;Dry &amp; reconstitute&quot;, replacement = &quot;Dry&quot;)
+d.recovery.all$step[d.recovery.all$step == &quot;Matrix effect (ESI)&quot;] = &quot;matrixEffect&quot;
+# not knowing why but this following command not work....
+d.recovery.all$step = d.recovery.all$step %&gt;% str_replace(pattern = &quot;Matrix effect (ESI)&quot;, replacement = &quot;matrixEffect&quot;)
+
+
+# combine accumulated recovery with stepwise recovery 
+d.recovery.cummulated.all.withStepWise = 
+  d.recovery.cummulated.all %&gt;%
+  left_join(d.recovery.all %&gt;% rename(status = corrected), 
+            by = c(&quot;compound&quot;, &quot;step&quot;, &quot;status&quot;)) %&gt;%
+  mutate(stepLossPercent = mean - 100)
+
+
+# d.recovery.cummulated.all.withStepWise %&gt;% select(compound, step, recovery.cummulated, status) %&gt;% 
+#   arrange(compound, status) %&gt;%
+#   as.data.frame()
+
+
+# mark y position in the plot for accumulated recovery -- horizontal line
+d.recovery.cummulated.all.withStepWise = 
+  d.recovery.cummulated.all.withStepWise %&gt;%
+  left_join(rbind(ymark, ymark.corrected) %&gt;% rename(ymark = recovery.cummulated), 
+            by = c(&quot;compound&quot;, &quot;step&quot;, &quot;status&quot;))
+
+
+# mark y position in the plot for stepwise loss -- vertical line
+d.recovery.cummulated.all.withStepWise = 
+  d.recovery.cummulated.all.withStepWise %&gt;%
+  group_by(compound, status, step)  %&gt;%
+  summarise(lossMarkPosition = mean(recovery.cummulated)) %&gt;%
+  
+  left_join(d.recovery.cummulated.all.withStepWise, by = c(&quot;compound&quot;, &quot;status&quot;, &quot;step&quot;))
+
+
+
+# now the main body has been built up, let&#39;s add the error band
+
+# pp1 = d.recovery.all %&gt;%
+#   filter(corrected == &quot;ISTD-corrected&quot;) %&gt;% select(-corrected)
+# 
+# pp1.mean = pp1 %&gt;% select(-sd) %&gt;% spread(step, mean) %&gt;%
+#   select(compound, Extraction, EMR, Dry)
+# names(pp1.mean) = c(&quot;compound&quot;, names(pp1.mean)[-1] %&gt;% str_c(&quot;.mean&quot;))
+# 
+# pp1.sd = pp1 %&gt;% select(-mean) %&gt;% spread(step, sd) %&gt;%
+#   select(compound, Extraction, EMR, Dry)
+# names(pp1.sd) = c(&quot;compound&quot;, names(pp1.sd)[-1] %&gt;% str_c(&quot;.sd&quot;))
+# 
+# pp1.mean %&gt;% left_join(pp1.sd, by = &quot;compound&quot;) %&gt;%
+#   mutate(Extraction = Extraction.mean,
+#          Extraction.errorBand = Extraction.sd,
+#          
+#          EMR = Extraction.mean * EMR.mean / 100,
+#          EMR.errorBand = 
+#          )
+
+
+# re-compute the accumulated recovery (as cross validation) more importantly the errorband!!
+myFunc1 = function(dataset){
+  kkk1 = dataset %&gt;% 
+    mutate(Extraction = B.mean / PX.mean * 100,
+           Extraction.errorBand = sqrt((B.sd / B.mean)^2 + (PX.sd / PX.mean)^2) * Extraction,
+           
+           EMR = B.mean / PC.mean * 100,
+           EMR.errorBand = sqrt((B.sd / B.mean)^2 + (PC.sd / PC.mean)^2) * EMR,
+           
+           Dry = B.mean / PR.mean * 100, 
+           Dry.errorBand = sqrt((B.sd / B.mean)^2 + (PR.sd / PR.mean)^2) * Dry,
+           
+           matrixEffect = B.mean / `PR neat.mean` * 100,
+           matrixEffect.errorBand = sqrt((B.sd / B.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * matrixEffect) %&gt;%
+    
+    select(-contains(&quot;.mean&quot;), -contains(&quot;.sd&quot;)) %&gt;% 
+    ungroup()
+  
+  uu1 = kkk1 %&gt;% select(compound, Extraction, EMR, Dry, matrixEffect) %&gt;%
+    gather(-compound, key = step, value = recovery.cummulated)
+  
+  uu2 = kkk1 %&gt;% select(compound, contains(&quot;errorBand&quot;)) %&gt;%
+    gather(-compound, key = step, value = recovery.cummulated) 
+  uu2$step = uu2$step %&gt;% str_extract(one_or_more(WRD))
+  uu2 = uu2 %&gt;% rename(recovery.cummulated.errorBand = recovery.cummulated)
+  
+  kkk1 = uu1 %&gt;% left_join(uu2, by = c(&quot;compound&quot;, &quot;step&quot;))
+  return(kkk1)
+}
+
+
+qqq1 = myFunc1(dataset = d.area.steps %&gt;% select(-C.mean, -C.sd, -contains(&quot;silica&quot;) ) ) %&gt;%
+  mutate(status = &quot;Absolute&quot;)
+
+qqq2 = myFunc1(dataset = d.area.corrected) %&gt;%
+  mutate(status = &quot;ISTD-corrected&quot;)
+
+d.recovery.cummulated.errorBand = qqq1 %&gt;% rbind(qqq2, by = c(&quot;compound&quot;, &quot;step&quot;)) %&gt;%
+  mutate(recovery.cummulated = recovery.cummulated %&gt;% as.numeric(),
+         recovery.cummulated.errorBand = recovery.cummulated.errorBand %&gt;% as.numeric())
+
+
+kkk1 = d.area.steps %&gt;% select(-C.mean, -C.sd, -contains(&quot;silica&quot;)) %&gt;%
+  mutate(Extraction = B.mean / PX.mean * 100,
+         Extraction.errorBand = sqrt((B.sd / B.mean)^2 + (PX.sd / PX.mean)^2) * Extraction,
+         
+         EMR = B.mean / PC.mean * 100,
+         EMR.errorBand = sqrt((B.sd / B.mean)^2 + (PC.sd / PC.mean)^2) * EMR,
+         
+         Dry = B.mean / PR.mean * 100,
+         Dry.errorBand = sqrt((B.sd / B.mean)^2 + (PR.sd / PR.mean)^2) * Dry,
+         
+         matrixEffect = B.mean / `PR neat.mean` * 100,
+         matrixEffect.errorBand = sqrt((B.sd / B.mean)^2 + (`PR neat.sd` / `PR neat.mean`)^2) * matrixEffect) %&gt;%
+  
+  select(-contains(&quot;.mean&quot;), -contains(&quot;.sd&quot;)) %&gt;%
+  ungroup()
+
+uu1 = kkk1 %&gt;% select(compound, Extraction, EMR, Dry, matrixEffect) %&gt;%
+  gather(-compound, key = step, value = recovery.cummulated)
+
+uu2 = kkk1 %&gt;% select(compound, contains(&quot;errorBand&quot;)) %&gt;%
+  gather(-compound, key = step, value = recovery.cummulated)
+uu2$step = uu2$step %&gt;% str_extract(one_or_more(WRD))
+uu2 = uu2 %&gt;% rename(recovery.cummulated.errorBand = recovery.cummulated)
+
+kkk1 = uu1 %&gt;% left_join(uu2, by = c(&quot;compound&quot;, &quot;step&quot;))
+
+
+
+
+# Combine with errorband dataset
+d.recovery.cummulated.all.withStepWise = 
+  d.recovery.cummulated.all.withStepWise %&gt;% 
+  left_join(d.recovery.cummulated.errorBand %&gt;% rename(recovery.cummulated.homogenous = recovery.cummulated), 
+            by = c(&quot;compound&quot;, &quot;status&quot;, &quot;step&quot;) )
+
+
+# ordered factor
+d.recovery.cummulated.all.withStepWise$step  = 
+  factor(d.recovery.cummulated.all.withStepWise$step, 
+         levels = c(&quot;Start&quot;, &quot;Extraction&quot;, &quot;EMR&quot;, &quot;Dry&quot;, &quot;matrixEffect&quot;, &quot;Detected&quot;), ordered = T)
+
+
+# add numeric x axis to easy label the accumulated recovery
+myX = seq(n_distinct(d.recovery.cummulated.all.withStepWise$step))  
+names(myX) = d.recovery.cummulated.all.withStepWise$step %&gt;% unique() %&gt;% sort()
+d.recovery.cummulated.all.withStepWise$numericX = myX[d.recovery.cummulated.all.withStepWise$step]
+
+
+
+# Note that for &quot;recovery.cummulated&quot;, each compound at each step has two values to form the vertical line in the plot, connecting the end of the prior step and the beginning of the following step. This term is only for purpse of drawing the line plot. For &quot;recovery.cummulated.homogenous&quot;, its homogenous, it&#39;s the pure accumulated recovery at the end of the given step. It&#39;s used to draw the error band. The homogenous term is equal to one of the two recovery.cummulated values for a given compound at a given step (and also at the given status - IS corrected or not)
+
+
+# plot
+dg = 0
+myalpha = .06
+
+# define plot function
+
+func.plotStepwiseRecovery = function(whichCompound) {
+  
+  dd.i = d.recovery.cummulated.all.withStepWise %&gt;% filter(compound == whichCompound)
+  
+  dd.i %&gt;% 
+    ggplot(aes(x = numericX, y = recovery.cummulated, color = status)) +
+    
+    geom_line(aes(group = status), position = position_dodge(dg), size = 1.2) +
+    
+    theme(legend.position = c(.25, .2),
+          legend.title = element_blank(),
+          legend.text = element_text(size = 14),
+          panel.grid = element_blank(),
+          strip.text = element_text(size = 14),
+          axis.text = element_text(colour = &quot;black&quot;),
+          axis.title = element_text(colour = &quot;black&quot;)
+    ) +
+    # scale_y_continuous(breaks = seq(0, max(dd.i$recovery.cummulated) + 10, by = 10)) +
+    scale_x_continuous(breaks = myX) +
+    
+    facet_wrap(~compound, nrow = 3, scales = &quot;free_y&quot;) +
+    scale_color_brewer(palette = &quot;Set1&quot;) +
+    scale_fill_brewer(palette = &quot;Set1&quot;) +
+    labs(x = &quot; &quot;, y = &quot;Recovery (%)&quot;) +
+    
+    
+    # error band
+    
+    # extraction error band for accumulated recovery until end of extraction
+    geom_ribbon(data = dd.i %&gt;% filter(step == &quot;Extraction&quot;),
+                aes(ymin = recovery.cummulated.homogenous - recovery.cummulated.errorBand,
+                    ymax = recovery.cummulated.homogenous + recovery.cummulated.errorBand,
+                    x = c(2,3, 2,3), fill = status), alpha = myalpha, position = position_dodge(dg), 
+                linetype = &quot;dotted&quot;, show.legend = F) +
+    
+    # EMR error band for accumulated recovery until end of EMR 
+    geom_ribbon(data = dd.i %&gt;% filter(step == &quot;EMR&quot;),
+                aes(ymin = recovery.cummulated.homogenous - recovery.cummulated.errorBand,
+                    ymax = recovery.cummulated.homogenous + recovery.cummulated.errorBand,
+                    x = c(3,4, 3,4), fill = status), alpha = myalpha, position = position_dodge(dg),  
+                linetype = &quot;dotted&quot;, show.legend = F) +
+    
+    # Dry and recovery error band for accumulated recovery until end of reconstitution
+    geom_ribbon(data = dd.i %&gt;% filter(step == &quot;Dry&quot;),
+                aes(ymin = recovery.cummulated.homogenous - recovery.cummulated.errorBand,
+                    ymax = recovery.cummulated.homogenous + recovery.cummulated.errorBand,
+                    x = c(4,5, 4,5), fill = status), alpha = myalpha, position = position_dodge(dg), 
+                linetype = &quot;dotted&quot;, show.legend = F) +
+    
+    # Matrix effect error band for accumulated recovery until end of ESI
+    geom_ribbon(data = dd.i %&gt;% filter(step == &quot;matrixEffect&quot;),
+                aes(ymin = recovery.cummulated.homogenous - recovery.cummulated.errorBand,
+                    ymax = recovery.cummulated.homogenous + recovery.cummulated.errorBand, 
+                    x = c(5,6, 5,6), fill = status), alpha = myalpha, position = position_dodge(dg), 
+                linetype = &quot;dotted&quot;, show.legend = F) +
+    
+    # Add annotation
+    
+    # stepwise loss
+    geom_label(aes(label = round(stepLossPercent, 1), y = lossMarkPosition), 
+               size = 5.5, label.padding = unit(0.12, &quot;lines&quot;),
+               # fontface = &quot;bold&quot;,
+               position = position_dodge(dg)) +
+    
+    # accumulated recovery
+    geom_label(aes(label = round(ymark, 1), 
+                   fill = status, 
+                   y = ymark, x = numericX + .5), 
+               fontface = &quot;bold&quot;, 
+               size = 5.5,label.padding = unit(0.12, &quot;lines&quot;),
+               color = &quot;white&quot;)  
+  
+}
+
+y1 = func.plotStepwiseRecovery(whichCompound =  &quot;RK&quot;)
+y1</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre class="r"><code>y2 = func.plotStepwiseRecovery(whichCompound =  &quot;ROH&quot;)
+y3 = func.plotStepwiseRecovery(whichCompound =  &quot;RK-Me&quot;)
+y4 = func.plotStepwiseRecovery(whichCompound =  &quot;3-HBA&quot;)
+
+plt.streamLine = plot_grid(y1, y2,  nrow = 2)
+
+
+# y3 = plot_grid(yy, plt.accuracy, nrow = 1, rel_widths = c(7, 4))</code></pre>
+</div>
+<div id="accuracy-variance-vs.background" class="section level1">
+<h1>Accuracy variance vs.background</h1>
+<pre class="r"><code># accuracy variance with background interference
+plt.accuracyVariance.vs.background = d.ABCD %&gt;% select(compound, contains(&quot;Accuracy&quot;), Name, conc.expected) %&gt;% 
+  left_join(d.conc.blk, by = &quot;compound&quot;) %&gt;%
+  mutate(ratio.spk.vs.blk = conc.expected / conc.blk.mean) %&gt;%
+  
+  
+  ggplot(aes(x = ratio.spk.vs.blk, y = Accuracy.sd, color = Name)) +
+  geom_point(size = 2, alpha = .5) +
+  geom_point(size = 2, shape = 21, fill = NA) +
+  geom_smooth(method = &quot;lm&quot;,  show.legend = F, aes(fill = Name), alpha = .1) +
+  scale_y_log10() +
+  scale_x_log10() +
+  
+  annotation_logticks(sides = &quot;lb&quot;) +
+  scale_color_brewer(palette = &quot;Set1&quot;) + 
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.position = &quot;right&quot;,
+        panel.grid = element_blank(),
+        legend.text = element_text(size = 13))
+
+plt.accuracyVariance.vs.background</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code>plt.accuracyAnalysis = plot_grid(
+  plt.accuracy, ggplot() + theme_void(), plt.accuracyVariance.vs.background, 
+  nrow = 1, rel_widths = c(5, 1.5, 4))
+
+
+
+
+plt.Validation.Accuracy.Recovery = plot_grid(
+  
+  plot_grid(plt.recovery.all, plt.streamLine, rel_widths = c(6, 3)), 
+  plt.accuracyAnalysis,
+  # nrow = 3,
+  # rel_heights = c(3, 3.6, 3)
+  
+  nrow = 2,
+  rel_heights = c(2.2, 1)
+)</code></pre>
+</div>
+<div id="validation-all-plots" class="section level1">
+<h1>Validation all plots</h1>
+<pre class="r"><code>plt.Validation.Accuracy.Recovery</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-23-1.png" width="1536" /></p>
+<pre class="r"><code># 15.3 X 18</code></pre>
+</div>
+<div id="sorbent-revisit2" class="section level1">
+<h1>Sorbent revisit2</h1>
+<div id="the-effect-of-biomatrices-and-sorbent-on-analytes-recovery" class="section level4">
+<h4>The effect of biomatrices and sorbent on analytes’ recovery</h4>
+<pre class="r"><code># ----Compare with the prior without sorbent in presence of biomatrices
+# the first formal validation study that renders low recovery
+mypath = &quot;/Users/Boyuan/Desktop/My publication/17. EMR Adipose RK metabolites/Archived/EMR_all data.xlsx&quot;
+
+
+# peak area 
+d.area = read_excel(mypath, sheet = &quot;peak area&quot;)
+
+d.area.copy = d.area
+
+d.area = d.area %&gt;% filter(Name %in% c(&quot;PRneat&quot;, &quot;B&quot;, &quot;PX&quot;, &quot;PC&quot;, &quot;PR&quot;, &quot;BLK&quot; )) %&gt;%
+  gather(-c(`Data File`, Name, `Acq. Date-Time`), key = compound, value = area)
+
+d.area.blk = d.area %&gt;%
+  filter(Name == &quot;BLK&quot;) %&gt;% group_by(compound) %&gt;%
+  summarise(area.blk.mean = mean(area), area.blk.std = sd(area))
+
+d.area.spk = d.area %&gt;% filter(Name != &quot;BLK&quot;) %&gt;% group_by(compound, Name) %&gt;% 
+  summarise(area.mean = mean(area),
+            area.sd = sd(area)) %&gt;%
+  # subtract blank
+  left_join(d.area.blk, by = &quot;compound&quot;) %&gt;%
+  mutate(area.spk = area.mean - area.blk.mean,
+         area.spk.sd = sqrt( area.sd ^2 + area.blk.std ^ 2 )) %&gt;%
+  select(compound, Name, contains(&quot;spk&quot;))
+
+# tidy up
+x = d.area.spk %&gt;% select(-area.spk.sd) %&gt;%
+  spread(key = Name, value = area.spk)
+
+y = d.area.spk %&gt;% select(-area.spk) %&gt;%
+  spread(key = Name, value = area.spk.sd)
+colnames(y) = c(&quot;compound&quot;, colnames(y)[-1] %&gt;% str_c(&quot;.sd&quot;))
+y</code></pre>
+<pre><code>## # A tibble: 26 x 6
+## # Groups:   compound [26]
+##    compound    B.sd  PC.sd PR.sd PRneat.sd PX.sd
+##    &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 3-HBA      376.   587.  1884.      397.  659.
+##  2 3-HPAA     777.   453.   905.      357.  677.
+##  3 3-HPPA     505.   768.  1032.      649. 1122.
+##  4 3,4-DHBA   802.   546.   737.      286.  709.
+##  5 3,4-DHPAA 1269.   182.   274.      353.  768.
+##  6 3,4-DHPE    69.2  189.   602.      207.  360.
+##  7 3,4-DHPPA  674.   643.   464.      552.  439.
+##  8 4-HBA     3929.  2995.  2762.     1408. 5057.
+##  9 4-HBOH      29.5   77.0  566.      215.  196.
+## 10 4-HCA      947.   543.  1144.     1031.  916.
+## # … with 16 more rows</code></pre>
+<pre class="r"><code>d.area.spk.net = left_join(x, y, by = &quot;compound&quot;)
+
+# compute analyte loss at each step
+d.area.spk.net = d.area.spk.net %&gt;%
+  mutate(rec.extract = B / PX * 100, 
+         rec.cleanup = PX / PC * 100, 
+         
+         rec.dryConcentrate = PC / PR * 100,
+         rec.dryConcentrate.sd = ((PC.sd / PC)^2 + (PR.sd / PR)^2) * rec.dryConcentrate )
+
+
+d.area.spk.net.copy = d.area.spk.net %&gt;% 
+  select(compound, contains(&quot;rec&quot;)) %&gt;%
+  select(-contains(&quot;sd&quot;)) %&gt;%
+  gather(-1, key = step, value = recovery) 
+
+
+
+# Combine the recovery with and without sorbent in presence of biomatrices
+# data from the first validation study (the one that failed due to low recovery at drying step without sorbent)
+k1 = d.area.spk.net %&gt;% 
+  select(compound, contains(&quot;rec.dryConcentrate&quot;)) %&gt;%
+  mutate(sorbent = &quot;with biomatrix, no sorbent&quot;) %&gt;% ungroup() 
+
+# data from the second validation study conducted with sorbent of C18 ca. 2~5 mg/600 uL ACN extract
+k2 = d.recovery.all %&gt;%
+  filter(step == &quot;Dry&quot;) %&gt;% filter(corrected == &quot;Absolute&quot;) %&gt;%
+  select(compound, mean, sd) %&gt;%
+  mutate(sorbent = &quot;with biomatrix, with C18&quot;) %&gt;%
+  rename(rec.dryConcentrate = mean, 
+         rec.dryConcentrate.sd = sd) %&gt;% ungroup()
+
+d.recoveryCompare.sorbentWithBiomatrices = k1 %&gt;% rbind(k2)
+
+
+# combine with when having biomatrix, with or without sorbent
+d.recoveryCompare.sorbentWithBiomatrices = 
+  
+  # no biomatrix, no sorbent
+  d.opt.sorbent.recovery %&gt;%
+  filter(sorbent == &quot;Sorbent free&quot;) %&gt;% ungroup() %&gt;%
+  select(compound, recovery.mean, recovery.sd) %&gt;%
+  rename(rec.dryConcentrate = recovery.mean,
+         rec.dryConcentrate.sd  = recovery.sd) %&gt;%
+  mutate(sorbent = &quot;no biomatrix, no sorbent&quot;) %&gt;%
+  
+  rbind(d.recoveryCompare.sorbentWithBiomatrices)
+
+
+# ordered matrix-sorbent condition
+d.recoveryCompare.sorbentWithBiomatrices$sorbent = 
+  d.recoveryCompare.sorbentWithBiomatrices$sorbent %&gt;% 
+  factor(levels = d.recoveryCompare.sorbentWithBiomatrices$sorbent %&gt;% unique(), ordered = T)
+
+
+
+#
+# plot
+# arrange compound from low to high recovery
+jjj = d.recoveryCompare.sorbentWithBiomatrices %&gt;% 
+  group_by(compound) %&gt;%
+  summarise(mean.rec = mean(rec.dryConcentrate)) %&gt;%
+  arrange(mean.rec)
+cmpd.ordered.dryRecovery = jjj$compound %&gt;% unique()
+
+d.recoveryCompare.sorbentWithBiomatrices$compound = 
+  d.recoveryCompare.sorbentWithBiomatrices$compound %&gt;%
+  factor(levels = cmpd.ordered.dryRecovery, ordered = T)
+
+
+# now plot!
+
+dg = .6
+plt.recoveryCompare.sorbentWithBiomatrices =
+  
+  d.recoveryCompare.sorbentWithBiomatrices %&gt;%
+  
+  filter(rec.dryConcentrate &lt; 120) %&gt;% # 4-HPPA, no biomatrix no sorbent the recoveryca. 150 outlier remove it
+  
+  ggplot(aes(x = compound, y = rec.dryConcentrate, fill = sorbent)) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(dg), alpha = 1, width = .7) +
+  theme(panel.grid = element_blank(),
+        legend.position = &quot;bottom&quot;,
+        legend.text = element_text(size = 11),
+        legend.title = element_blank(),
+        axis.text = element_text(size = 11)) +
+  scale_y_continuous(breaks = seq(0, 120, 20)) +
+  
+  geom_errorbar(aes( ymin = rec.dryConcentrate - rec.dryConcentrate.sd,
+                     ymax = rec.dryConcentrate + rec.dryConcentrate.sd,
+                     color = sorbent),
+                position = position_dodge(dg), width = .5) +
+  coord_flip() +
+  labs(y = &quot;Recovery (%) &quot;) +
+  scale_color_manual(values = c(&quot;snow4&quot;, &quot;tomato&quot;, &quot;skyblue&quot;)) +
+  scale_fill_manual(values = c(&quot;snow4&quot;, &quot;tomato&quot;, &quot;skyblue&quot;))</code></pre>
+<pre class="r"><code># plt.recoveryCompare.sorbentWithBiomatrices</code></pre>
+<pre class="r"><code># plot sorbent rsult
+plot_grid(plt.sorbentOptimization,
+          plt.recoveryCompare.sorbentWithBiomatrices, 
+          nrow = 1, rel_widths = c(1.5, 1))</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-27-1.png" width="1152" /></p>
+<pre class="r"><code>#  big screen 14.7 X 8.16</code></pre>
+</div>
+</div>
+<div id="sorbent-revist-3" class="section level1">
+<h1>Sorbent revist-3</h1>
+<div id="validation-at-level-c-50-ngml-injection-conc." class="section level4">
+<h4>Validation at level C, 50 ng/mL injection conc.</h4>
+<pre class="r"><code># Check the effect of with vs. without sorbent validated at level C， i.e. about 50 ng/mL
+d.area = read_excel(path, sheet = &quot;peak area&quot;)
+gg = d.area %&gt;%
+  filter(Name %in% c(&quot;C&quot;, &quot;no silica gel&quot;)) %&gt;%
+  select(-c(`Acq. Date-Time`, `Data File`)) %&gt;%
+  gather(-Name, key = compound, value = resp) %&gt;%
+  group_by(Name, compound) %&gt;%
+  summarise(resp.mean = mean(resp),
+            resp.sd = sd(resp))
+
+
+gg = gg %&gt;%
+  group_by(compound) %&gt;%
+  mutate(resp.mean.normalize = resp.mean / mean(resp.mean),
+         resp.sd.normalize = resp.sd / mean(resp.mean)) %&gt;%
+  select(Name, compound, contains(&quot;normalize&quot;)) 
+
+mj = gg %&gt;% filter(Name == &quot;C&quot;) %&gt;%
+  arrange(resp.mean.normalize)
+
+
+gg$compound = factor(gg$compound, levels = rev(mj$compound), ordered = T)</code></pre>
+<pre class="r"><code>gg %&gt;% filter(compound != &quot;4-HPPA&quot;) %&gt;%
+  ggplot(aes(x = compound, y = resp.mean.normalize, color = Name, fill = Name)) +
+  
+  geom_bar(stat = &quot;identity&quot;, alpha = .6, position = position_dodge(.6)) +
+  
+  geom_errorbar(aes(ymin = resp.mean.normalize - resp.sd.normalize,
+                    ymax = resp.mean.normalize + resp.sd.normalize), 
+                width = .3, position = position_dodge(.6)) +
+  # coord_flip() +
+  labs(y = &quot;Normalized peak area&quot;) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        panel.grid = element_blank())</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-29-1.png" width="768" /></p>
+</div>
+</div>
+<div id="check-numbers-for-paper-writing" class="section level1">
+<h1>Check numbers for paper writing</h1>
+<pre class="r"><code># -- check some numbers for paper writing
+
+d.checkProcessingEfficency.vs.accuracy.B.Level = d.ABCD %&gt;% filter(Name == &quot;B&quot;) %&gt;% 
+  select(compound, Accuracy.mean) %&gt;% 
+  
+  left_join(d.recovery.all %&gt;% filter(step == &quot;Overall processing efficiency&quot;) %&gt;%
+              filter(corrected == &quot;ISTD-corrected&quot;), by = &quot;compound&quot;) %&gt;%
+  select(compound, Accuracy.mean, mean) %&gt;%
+  rename(ProcessingEfficiency.corrected = mean) %&gt;%
+  mutate(ratio = Accuracy.mean / ProcessingEfficiency.corrected) %&gt;%
+  arrange(ratio)
+
+d.checkProcessingEfficency.vs.accuracy.B.Level$compound = 
+  factor(d.checkProcessingEfficency.vs.accuracy.B.Level$compound, 
+         levels = d.checkProcessingEfficency.vs.accuracy.B.Level$compound, 
+         ordered = T)
+
+d.checkProcessingEfficency.vs.accuracy.B.Level %&gt;% 
+  ggplot(aes(x = compound, y = ratio)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  coord_flip() +
+  geom_segment(aes(x = 1, xend = 26, y = 1, yend = 1))</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<pre class="r"><code>d.recovery.all$step %&gt;% unique()</code></pre>
+<pre><code>## [1] &quot;Extraction&quot;                    &quot;EMR&quot;                          
+## [3] &quot;Dry&quot;                           &quot;Overall recovery&quot;             
+## [5] &quot;matrixEffect&quot;                  &quot;Overall processing efficiency&quot;</code></pre>
+<pre class="r"><code>px = d.recovery.all %&gt;% 
+  filter(step == &quot;Overall processing efficiency&quot;) %&gt;%
+  filter(corrected == &quot;ISTD-corrected&quot;) %&gt;%
+  arrange(mean) %&gt;%
+  as.data.frame() 
+# px
+px$mean %&gt;% hist(breaks = 26)</code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-30-2.png" width="672" /></p>
+<pre class="r"><code>kkkkk = d.recovery.all %&gt;% 
+  filter(step == &quot;Overall processing efficiency&quot;) %&gt;%
+  select(-step, -sd) %&gt;%
+  spread(key = corrected, value = mean) %&gt;%
+  mutate(correctAmoung = `ISTD-corrected` - Absolute)
+kkkkk$correctAmoung %&gt;% hist(breaks = 26)   </code></pre>
+<p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-30-3.png" width="672" /></p>
+<pre class="r"><code>pp = d.recoveryCompare.sorbentWithBiomatrices %&gt;%
+  select(-contains(&quot;.sd&quot;)) %&gt;%
+  spread(sorbent, rec.dryConcentrate) %&gt;%
+  mutate(sorb.improv = `with biomatrix, with C18` - `with biomatrix, no sorbent`) %&gt;%
+  arrange(sorb.improv) %&gt;%
+  as.data.frame()
+# pp</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -6,4 +6,6 @@ navbar:
       href: index.html
     - text: "Stepwise recovery"
       href: Stepwise_Recovery_linePlot.html
+    - text: "Analysis script"
+      href: RK_EMR_analysis.html
 output_dir: "."
