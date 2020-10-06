@@ -15,9 +15,9 @@ output:
 
 <br><br><br><br>
 
-<p style = "color: white; text-align:center; font-size: 140%;"> Follow the senior author of this work <strong>[Bo Yuan](https://scholar.google.com/citations?user=aFh0570AAAAJ&hl=en&authuser=1) </strong> </p>
+<p style = "color: white; text-align:center; font-size: 140%;"> Follow the senior authors of this work <strong>[Drs. Danyue (Daisy) Zhao](https://www.polyu.edu.hk/abct/en/staff/academic_staff/index.php?id=danyzhao)</strong> and  <strong>[Bo Yuan](https://scholar.google.com/citations?user=aFh0570AAAAJ&hl=en&authuser=1) </strong> </p>
 
-<p style = "color: white; text-align:center; font-size: 140%;"> and the principle investigators <strong>[Dr. Qingli Wu](https://plantbiology.rutgers.edu/faculty/wu/Qing-Li_Wu.html)</strong> and <strong>[Dr. James E. Simon](https://plantbiology.rutgers.edu/faculty/simon/James_Simon.html)</strong> </p>
+<p style = "color: white; text-align:center; font-size: 140%;"> and the principle investigators <strong>[Drs. Qingli Wu](https://plantbiology.rutgers.edu/faculty/wu/Qing-Li_Wu.html)</strong> and <strong>[James E. Simon](https://plantbiology.rutgers.edu/faculty/simon/James_Simon.html)</strong> </p>
 
 
 <p style = "color: white; text-align:center; font-size: 140%;"> Welcome to visit our <strong>[Laboratory Website](http://newuseag.rutgers.edu/)</strong> </p>

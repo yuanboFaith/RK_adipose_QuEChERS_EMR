@@ -336,19 +336,21 @@ d.opt.sorbent.recovery = y %&gt;% left_join(x, by = c(&quot;compound&quot;)) %&g
 d.opt.sorbent.recovery</code></pre>
 <pre><code>## # A tibble: 182 x 8
 ## # Groups:   sorbent [7]
-##    sorbent compound resp.mean resp.sd resp.ctrl.mean resp.ctrl.sd recovery.mean
-##    &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
-##  1 100 NP  3-HBA        2537.    91.8          2731.        313.           92.9
-##  2 100 NP  3-HPAA       2248.   329.           2560.         37.8          87.8
-##  3 100 NP  3-HPPA       3208.   479.           3907.        119.           82.1
-##  4 100 NP  3,4-DHBA     1123.   178.           1099.        241.          102. 
-##  5 100 NP  3,4-DHP…      176.   119.            407.        147.           43.1
-##  6 100 NP  3,4-DHPE     1031.    93.5          1672.        145.           61.7
-##  7 100 NP  3,4-DHP…      203.    81.7           646.         85.6          31.5
-##  8 100 NP  4-HBA        6886.   742.           7439.        138.           92.6
-##  9 100 NP  4-HBOH       2652.   280.           3249.         96.3          81.6
-## 10 100 NP  4-HCA        1226.   152.           1367.         34.8          89.7
-## # … with 172 more rows, and 1 more variable: recovery.sd &lt;dbl&gt;</code></pre>
+##    sorbent compound resp.mean resp.sd resp.ctrl.mean
+##    &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;          &lt;dbl&gt;
+##  1 100 NP  3-HBA        2537.    91.8          2731.
+##  2 100 NP  3-HPAA       2248.   329.           2560.
+##  3 100 NP  3-HPPA       3208.   479.           3907.
+##  4 100 NP  3,4-DHBA     1123.   178.           1099.
+##  5 100 NP  3,4-DHP…      176.   119.            407.
+##  6 100 NP  3,4-DHPE     1031.    93.5          1672.
+##  7 100 NP  3,4-DHP…      203.    81.7           646.
+##  8 100 NP  4-HBA        6886.   742.           7439.
+##  9 100 NP  4-HBOH       2652.   280.           3249.
+## 10 100 NP  4-HCA        1226.   152.           1367.
+## # … with 172 more rows, and 3 more variables:
+## #   resp.ctrl.sd &lt;dbl&gt;, recovery.mean &lt;dbl&gt;,
+## #   recovery.sd &lt;dbl&gt;</code></pre>
 <pre class="r"><code>d.opt.sorbent.recovery$sorbent = d.opt.sorbent.recovery$sorbent %&gt;% 
   factor(levels = c(&quot;Sorbent free&quot;, &quot;100 NP (big size)&quot;, &quot;100 NP&quot;, &quot;75 NP-25 RP&quot;, &quot;50 NP-50 RP&quot;, &quot;25 NP-75 RP&quot;, &quot;100 RP&quot;), ordered = T)
 
@@ -416,12 +418,13 @@ plt.sorbentOptimization = d.opt.sorbent.recovery %&gt;%
   filter(compound %in% c(&quot;RK-Me&quot;, &quot;PhLiAce&quot;, &quot;4-HBOH&quot;)) %&gt;%
   select(sorbent, compound, recovery.mean) %&gt;% spread(sorbent, recovery.mean)</code></pre>
 <pre><code>## # A tibble: 3 x 8
-##   compound `Sorbent free` `100 NP (big si… `100 NP` `75 NP-25 RP` `50 NP-50 RP`
-##   &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
-## 1 4-HBOH           22.1               72.7     81.6          83.6          86.6
-## 2 PhLiAce           0.456             16.0     17.1          22.0          26.7
-## 3 RK-Me             0.952             66.4     60.0          68.3          69.2
-## # … with 2 more variables: `25 NP-75 RP` &lt;dbl&gt;, `100 RP` &lt;dbl&gt;</code></pre>
+##   compound `Sorbent free` `100 NP (big si… `100 NP`
+##   &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt;    &lt;dbl&gt;
+## 1 4-HBOH           22.1               72.7     81.6
+## 2 PhLiAce           0.456             16.0     17.1
+## 3 RK-Me             0.952             66.4     60.0
+## # … with 4 more variables: `75 NP-25 RP` &lt;dbl&gt;, `50
+## #   NP-50 RP` &lt;dbl&gt;, `25 NP-75 RP` &lt;dbl&gt;, `100 RP` &lt;dbl&gt;</code></pre>
 <pre class="r"><code>d.opt.sorbent.recovery$compound %&gt;% n_distinct()</code></pre>
 <pre><code>## [1] 26</code></pre>
 <pre class="r"><code># Effect of sorbent mass
@@ -437,19 +440,20 @@ d.opt.sorbent.mass = d.opt.sorbent.mass %&gt;%
 d.opt.sorbent.mass</code></pre>
 <pre><code>## # A tibble: 78 x 4
 ## # Groups:   sorbent mass [3]
-##    `sorbent mass` compound  resp.relative.mean resp.relative.sd
-##    &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;
-##  1 1~5 mg         3-HBA                   1.06           0.0362
-##  2 1~5 mg         3-HPAA                  1.03           0.0222
-##  3 1~5 mg         3-HPPA                  1.10           0.0828
-##  4 1~5 mg         3,4-DHBA                1.21           0.304 
-##  5 1~5 mg         3,4-DHPAA               1.50           0.596 
-##  6 1~5 mg         3,4-DHPE                1.18           0.192 
-##  7 1~5 mg         3,4-DHPPA               1.23           0.543 
-##  8 1~5 mg         4-HBA                   1.06           0.0762
-##  9 1~5 mg         4-HBOH                  1.07           0.0145
-## 10 1~5 mg         4-HCA                   1.07           0.0779
-## # … with 68 more rows</code></pre>
+##    `sorbent mass` compound resp.relative.m…
+##    &lt;chr&gt;          &lt;chr&gt;               &lt;dbl&gt;
+##  1 1~5 mg         3-HBA                1.06
+##  2 1~5 mg         3-HPAA               1.03
+##  3 1~5 mg         3-HPPA               1.10
+##  4 1~5 mg         3,4-DHBA             1.21
+##  5 1~5 mg         3,4-DHP…             1.50
+##  6 1~5 mg         3,4-DHPE             1.18
+##  7 1~5 mg         3,4-DHP…             1.23
+##  8 1~5 mg         4-HBA                1.06
+##  9 1~5 mg         4-HBOH               1.07
+## 10 1~5 mg         4-HCA                1.07
+## # … with 68 more rows, and 1 more variable:
+## #   resp.relative.sd &lt;dbl&gt;</code></pre>
 <pre class="r"><code>plt.sorbent.mass = d.opt.sorbent.mass %&gt;%
   ggplot(aes(x = `sorbent mass`, y = resp.relative.mean, color = compound)) +
   geom_boxplot(aes(group = `sorbent mass`), outlier.alpha = 0) +
@@ -555,11 +559,13 @@ dg = .4</code></pre>
 
 d.ABCD %&gt;% filter(Accuracy.sd &gt; 50) </code></pre>
 <pre><code>## # A tibble: 3 x 8
-##   compound Name  conc.spk.mean conc.spk.sd conc.expected Accuracy.mean Accuracy.sd level
-##   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt; &lt;ord&gt;
-## 1 4-HBA    D              7.77        22.1          17.5          44.4       126.  20   
-## 2 4-HPAA   D             18.1         12.3          19.4          93.1        63.1 20   
-## 3 CA       D             32.4         16.7          21.7         149.         76.7 20</code></pre>
+##   compound Name  conc.spk.mean conc.spk.sd conc.expected
+##   &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+## 1 4-HBA    D              7.77        22.1          17.5
+## 2 4-HPAA   D             18.1         12.3          19.4
+## 3 CA       D             32.4         16.7          21.7
+## # … with 3 more variables: Accuracy.mean &lt;dbl&gt;,
+## #   Accuracy.sd &lt;dbl&gt;, level &lt;ord&gt;</code></pre>
 <pre class="r"><code># &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^# &lt;&gt;)*$#*(#@!$&amp;&lt;&gt;*&amp;%$#@!@#^*^</code></pre>
 </div>
 <div id="stepwise-recovery-validation" class="section level1">
@@ -617,19 +623,20 @@ colnames(y) = c(&quot;compound&quot;, colnames(y)[-1] %&gt;% str_c(&quot;.sd&quo
 y</code></pre>
 <pre><code>## # A tibble: 26 x 8
 ## # Groups:   compound [26]
-##    compound    B.sd  C.sd `no silica gel.sd` PC.sd PR.sd `PR neat.sd` PX.sd
-##    &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
-##  1 3-HBA      1554.  249.              288.  1431.  727.        1915. 1060.
-##  2 3-HPAA      491.  123.               74.5  489.  397.         666.  316.
-##  3 3-HPPA     2908.  936.              281.  3529. 1474.        2419. 1433.
-##  4 3,4-DHBA   4313.  971.              658.  4378. 2164.        3125. 1887.
-##  5 3,4-DHPAA  2733.  502.              377.  2327. 1664.        3092.  988.
-##  6 3,4-DHPE    811.  147.               83.6  707.  448.        1305.  810.
-##  7 3,4-DHPPA  2083.  359.              107.  3207. 3292.        3641. 1859.
-##  8 4-HBA     10031. 5853.             2516.  7081. 3001.        6918. 4978.
-##  9 4-HBOH      933.  232.              102.  2094. 1614.        4045. 1576.
-## 10 4-HCA      1983.  459.              360.  2743. 1404.        3480. 1681.
-## # … with 16 more rows</code></pre>
+##    compound   B.sd  C.sd `no silica gel.… PC.sd PR.sd
+##    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 3-HBA     1554.  249.            288.  1431.  727.
+##  2 3-HPAA     491.  123.             74.5  489.  397.
+##  3 3-HPPA    2908.  936.            281.  3529. 1474.
+##  4 3,4-DHBA  4313.  971.            658.  4378. 2164.
+##  5 3,4-DHP…  2733.  502.            377.  2327. 1664.
+##  6 3,4-DHPE   811.  147.             83.6  707.  448.
+##  7 3,4-DHP…  2083.  359.            107.  3207. 3292.
+##  8 4-HBA    10031. 5853.           2516.  7081. 3001.
+##  9 4-HBOH     933.  232.            102.  2094. 1614.
+## 10 4-HCA     1983.  459.            360.  2743. 1404.
+## # … with 16 more rows, and 2 more variables: `PR
+## #   neat.sd` &lt;dbl&gt;, PX.sd &lt;dbl&gt;</code></pre>
 <pre class="r"><code>d.area.steps = left_join(x, y, by = &quot;compound&quot;)
 
 
@@ -898,21 +905,25 @@ d.recovery.corrected = d.area.corrected %&gt;%
 
 d.recovery.corrected</code></pre>
 <pre><code>## # A tibble: 26 x 13
-##    compound rec.extraction.… rec.extraction.… rec.EMR.mean rec.EMR.sd rec.DryReconsti…
-##    &lt;chr&gt;               &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;            &lt;dbl&gt;
-##  1 3-HBA                95.1             5.42         98.3       5.46            103. 
-##  2 3-HPAA               95.9             6.83         98.0       5.42            103. 
-##  3 3-HPPA              126.             12.9          98.5      11.9             131. 
-##  4 3,4-DHBA             94.5             5.56         95.1       6.90            105. 
-##  5 3,4-DHP…             84.6            14.6          92.0      10.8              87.1
-##  6 3,4-DHPE             78.8            24.6          85.9      21.1              45.2
-##  7 3,4-DHP…             96.7            30.5          96.6      29.2              61.3
-##  8 4-HBA                99.9             9.77         92.7       6.45            104. 
-##  9 4-HBOH               85.0            18.6          87.8      23.5              30.2
-## 10 4-HCA                84.0             6.21         78.8       3.91            102. 
-## # … with 16 more rows, and 7 more variables: rec.DryReconstitute.sd &lt;dbl&gt;,
-## #   rec.Overall.mean &lt;dbl&gt;, rec.Overall.sd &lt;dbl&gt;, matrixESI.mean &lt;dbl&gt;,
-## #   matrixESI.sd &lt;dbl&gt;, process.eff.mean &lt;dbl&gt;, process.eff.sd &lt;dbl&gt;</code></pre>
+##    compound rec.extraction.… rec.extraction.…
+##    &lt;chr&gt;               &lt;dbl&gt;            &lt;dbl&gt;
+##  1 3-HBA                95.1             5.42
+##  2 3-HPAA               95.9             6.83
+##  3 3-HPPA              126.             12.9 
+##  4 3,4-DHBA             94.5             5.56
+##  5 3,4-DHP…             84.6            14.6 
+##  6 3,4-DHPE             78.8            24.6 
+##  7 3,4-DHP…             96.7            30.5 
+##  8 4-HBA                99.9             9.77
+##  9 4-HBOH               85.0            18.6 
+## 10 4-HCA                84.0             6.21
+## # … with 16 more rows, and 10 more variables:
+## #   rec.EMR.mean &lt;dbl&gt;, rec.EMR.sd &lt;dbl&gt;,
+## #   rec.DryReconstitute.mean &lt;dbl&gt;,
+## #   rec.DryReconstitute.sd &lt;dbl&gt;,
+## #   rec.Overall.mean &lt;dbl&gt;, rec.Overall.sd &lt;dbl&gt;,
+## #   matrixESI.mean &lt;dbl&gt;, matrixESI.sd &lt;dbl&gt;,
+## #   process.eff.mean &lt;dbl&gt;, process.eff.sd &lt;dbl&gt;</code></pre>
 <pre class="r"><code># colnames(d.recovery.corrected) = c(&quot;compound&quot;, str_c(&quot;crrct.&quot;, colnames(d.recovery.corrected)[-1]))
 # d.recovery.corrected
 
@@ -1647,9 +1658,12 @@ d.checkProcessingEfficency.vs.accuracy.B.Level %&gt;%
   geom_segment(aes(x = 1, xend = 26, y = 1, yend = 1))</code></pre>
 <p><img src="RK_EMR_analysis_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <pre class="r"><code>d.recovery.all$step %&gt;% unique()</code></pre>
-<pre><code>## [1] &quot;Extraction&quot;                    &quot;EMR&quot;                          
-## [3] &quot;Dry&quot;                           &quot;Overall recovery&quot;             
-## [5] &quot;matrixEffect&quot;                  &quot;Overall processing efficiency&quot;</code></pre>
+<pre><code>## [1] &quot;Extraction&quot;                   
+## [2] &quot;EMR&quot;                          
+## [3] &quot;Dry&quot;                          
+## [4] &quot;Overall recovery&quot;             
+## [5] &quot;matrixEffect&quot;                 
+## [6] &quot;Overall processing efficiency&quot;</code></pre>
 <pre class="r"><code>px = d.recovery.all %&gt;% 
   filter(step == &quot;Overall processing efficiency&quot;) %&gt;%
   filter(corrected == &quot;ISTD-corrected&quot;) %&gt;%
