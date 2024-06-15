@@ -1,5 +1,7 @@
 ## Development and validation of a micro-QuEChERS method with high-throughput enhanced matrix removal followed with UHPLC-QqQ-MS/MS for analysis of raspberry ketone-related phenolic compounds in adipose tissues
 
+<br>
+
 **See [original article](https://www.sciencedirect.com/science/article/abs/pii/S0039914021006378?via%3Dihub) published in _Talanta_.**
 
 <br>
